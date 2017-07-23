@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-
+import $ from 'jquery';
 
 
 const Card = (props) => {
@@ -17,10 +17,6 @@ const Card = (props) => {
     )
 };
 
-//Data array object
-let data = [
-    
-]
 
 const CardList = (props) => {
     return(
@@ -31,12 +27,23 @@ const CardList = (props) => {
 }
 
 class Form extends React.Component{
+    
     state = {
         username:''
     }
     handleSubmit = (event) => {
         //Prevent page from refreshing with submit 
         event.preventDefault();
+
+        //Make call to api and pass this data up to the App component
+        let github_url = "https://api.github.com/users/";
+        $.getJSON(github_url+this.state.username)
+        .done((resp) => {
+            
+            this.props.onSubmit(resp);
+        } );
+
+        
 
     }
     render(){
@@ -56,16 +63,19 @@ class Form extends React.Component{
 class App extends React.Component{
     state={
         cards: [
-            {name: "Abhilash Kumar",
-            avatar_url:"https://avatars2.githubusercontent.com/u/5935955?v=4" ,
-            location:"Toronto"},
-
+       
         ]
+    };
+
+    addNewCard = (cardInfo) => {
+        this.setState(prevState => ({
+            cards: prevState.cards.concat(cardInfo)
+        }));
     };
     render(){
         return(
             <div style={{margin:"1em"}}>
-                <Form />
+                <Form onSubmit={this.addNewCard} />
                 <CardList cards={this.state.cards} />
             </div>
         )

@@ -15,20 +15,62 @@ const Card = (props) => {
             
         </div>
     )
-}
+};
+
+//Data array object
+let data = [
+    
+]
 
 const CardList = (props) => {
     return(
         <div>
-            <Card name="Abhilash Kumar"
-                avatar_url="https://avatars2.githubusercontent.com/u/5935955?v=4" 
-                location="Toronto"/>
-            <Card />
-            <Card />
+            {props.cards.map(card => <Card {...card} />)}
         </div>
     )
 }
 
+class Form extends React.Component{
+    state = {
+        username:''
+    }
+    handleSubmit = (event) => {
+        //Prevent page from refreshing with submit 
+        event.preventDefault();
+
+    }
+    render(){
+        return(
+            <form onSubmit={this.handleSubmit}>
+                <input 
+                 value = {this.state.username}
+                 onChange = {(event)=> this.setState({username:event.target.value})}
+                 type="text" placeholder='Github username' required />
+                <button type='submit'>Add Card</button>
+            </form>
+
+        );
+    }
+}
+
+class App extends React.Component{
+    state={
+        cards: [
+            {name: "Abhilash Kumar",
+            avatar_url:"https://avatars2.githubusercontent.com/u/5935955?v=4" ,
+            location:"Toronto"},
+
+        ]
+    };
+    render(){
+        return(
+            <div style={{margin:"1em"}}>
+                <Form />
+                <CardList cards={this.state.cards} />
+            </div>
+        )
+    }
+}
 
 
 
@@ -38,5 +80,5 @@ const CardList = (props) => {
 
 
 ReactDOM.render(
-    <CardList />, document.getElementById('root'));
+    <App  />, document.getElementById('root'));
 
